@@ -7,14 +7,13 @@ import org.fvera.test.springboot.app.models.TransaccionDto;
 import org.fvera.test.springboot.app.services.CuentaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-@Controller
+@RestController
 @RequestMapping("/api/cuentas")
 public class CuentaController {
     @Autowired
