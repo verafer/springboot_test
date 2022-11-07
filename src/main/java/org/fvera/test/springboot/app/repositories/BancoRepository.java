@@ -1,13 +1,14 @@
 package org.fvera.test.springboot.app.repositories;
 
 import org.fvera.test.springboot.app.models.Banco;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface BancoRepository {
-    List<Banco> findAll();
+public interface BancoRepository extends JpaRepository<Banco, Long> {
+    //List<Banco> findAll();
 
-    Banco findById(Long id);
+    //Banco findById(Long id);
 
-    void update(Banco banco);
+    //void update(Banco banco);
 }
