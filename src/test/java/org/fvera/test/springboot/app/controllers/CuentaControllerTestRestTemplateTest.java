@@ -1,5 +1,7 @@
 package org.fvera.test.springboot.app.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.fvera.test.springboot.app.models.TransaccionDto;
 import org.junit.jupiter.api.*;
@@ -12,6 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,7 +38,7 @@ class CuentaControllerTestRestTemplateTest {
 
     @Test
     @Order(1)
-    void testTransferir() {
+    void testTransferir() throws JsonProcessingException {
         TransaccionDto dto = new TransaccionDto();
         dto.setMonto(new BigDecimal("100"));
         dto.setCuentaDestinoId(2L);
@@ -50,6 +55,19 @@ class CuentaControllerTestRestTemplateTest {
         assertNotNull(json);
         assertTrue(json.contains("Transferencia realizada con éxito"));
 
+        JsonNode jsonNode = objectMapper.readTree(json);
+        assertEquals("Transferencia realizada con éxito", jsonNode.path("mensaje").asText());
+        assertEquals(LocalDate.now().toString(), jsonNode.path("date").asText());
+        assertEquals("100", jsonNode.path("transaccion").path("monto").asText());
+        assertEquals(1L, jsonNode.path("transaccion").path("cuentaOrigenId").asLong());
+
+        Map<String, Object> response2 = new HashMap<>();
+        response2.put("date", LocalDate.now());
+        response2.put("status", "OK");
+        response2.put("mensaje", "Transferencia realizada con éxito!");
+        response2.put("transaccion", dto);
+
+        assertEquals(objectMapper.writeValueAsString(response2), json);
     }
 
     private String crearUri(String uri){
