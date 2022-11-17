@@ -4,6 +4,7 @@ import org.fvera.test.springboot.app.models.Banco;
 import org.fvera.test.springboot.app.models.Cuenta;
 import org.fvera.test.springboot.app.repositories.BancoRepository;
 import org.fvera.test.springboot.app.repositories.CuentaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
