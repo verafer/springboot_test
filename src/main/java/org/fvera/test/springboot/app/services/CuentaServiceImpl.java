@@ -23,7 +23,7 @@ public class CuentaServiceImpl implements CuentaService{
 
     @Override
     public List<Cuenta> findAll() {
-        return null;
+        return cuentaRepository.findAll();
     }
 
     @Override
