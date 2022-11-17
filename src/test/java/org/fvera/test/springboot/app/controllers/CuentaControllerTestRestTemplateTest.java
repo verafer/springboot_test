@@ -16,7 +16,9 @@ import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -84,6 +86,32 @@ class CuentaControllerTestRestTemplateTest {
         assertEquals("Andrés", cuenta.getPersona());
         assertEquals("900.00", cuenta.getSaldo());
         assertEquals(new Cuenta(1L, "Andrés", new BigDecimal("900.00")), cuenta);
+    }
+
+    @Test
+    @Order(3)
+    void testListar() throws JsonProcessingException {
+        ResponseEntity<Cuenta[]> respuesta = client.getForEntity(crearUri("/api/cuentas"), Cuenta[].class);
+        List<Cuenta> cuentas = Arrays.asList(respuesta.getBody());
+
+        assertEquals(HttpStatus.OK, respuesta.getStatusCode());
+        assertEquals(MediaType.APPLICATION_JSON, respuesta.getHeaders().getContentType());
+
+        assertEquals(2, cuentas.size());
+        assertEquals(1, cuentas.get(0).getId());
+        assertEquals("Andrés", cuentas.get(0).getPersona());
+        assertEquals("900.00", cuentas.get(0).getSaldo());
+        assertEquals(2, cuentas.get(1).getId());
+        assertEquals("Jhon", cuentas.get(1).getPersona());
+        assertEquals("2100.00", cuentas.get(1).getSaldo());
+
+        JsonNode json = objectMapper.readTree(objectMapper.writeValueAsString(cuentas));
+        assertEquals(1L, json.get(0).path("id").asLong());
+        assertEquals("Andrés", json.get(0).path("persona").asText());
+        assertEquals("900.0", json.get(0).path("saldo").asText());
+        assertEquals(2L, json.get(1).path("id").asLong());
+        assertEquals("Jhon", json.get(1).path("persona").asText());
+        assertEquals("2100.0", json.get(1).path("saldo").asText());
     }
 
     private String crearUri(String uri){
